@@ -50,7 +50,9 @@ jobs:
           X_API_HOST: ${{ secrets.X_API_HOST }}
           CONTACT_USER: ${{ secrets.CONTACT_USER }}
           CONTACT_KEY:  ${{ secrets.CONTACT_KEY }}
-        run: yarn build
+        run: |
+          echo "Starting build process..."
+          yarn build --verbose
 
   deploy:
     runs-on: ubuntu-latest
