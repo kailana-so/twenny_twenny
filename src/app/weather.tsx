@@ -27,8 +27,9 @@ export default function Weather() {
         url: 'https://weatherapi-com.p.rapidapi.com/current.json',
         params: { q: place },
         headers: {
-        //   KEYS
-        }
+            'X-RapidAPI-Key':  process.env.X_API_KEY,
+            'X-RapidAPI-Host':  process.env.X_API_HOST,
+          }  
     };
 
     useEffect(() => {
