@@ -45,7 +45,7 @@ jobs:
 
     steps:
       - name: Print working directory
-          run: pwd
+        run: pwd
 
       - name: List repository contents
         run: ls -la
