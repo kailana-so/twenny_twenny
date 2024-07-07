@@ -10,7 +10,6 @@ jobs:
 
   install_dependencies:
     runs-on: ubuntu-latest
-    needs: before_script
 
     steps:
       - name: Checkout repository
