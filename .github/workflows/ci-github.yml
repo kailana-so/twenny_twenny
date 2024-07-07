@@ -7,20 +7,6 @@ on:
       - main
 
 jobs:
-  before_script:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '18'
-
-      - name: Check configs
-        run: |
-          echo "Checking environment variables..."
-          echo "X_API_URL: $X_API_URL"
-          echo "CONTACT_USER: $CONTACT_USER"
 
   install_dependencies:
     runs-on: ubuntu-latest
@@ -43,6 +29,17 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        
+       - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18' 
+
+      - name: Check configs
+        run: |
+          echo "Checking environment variables..."
+          echo "X_API_URL: $X_API_URL"
+          echo "CONTACT_USER: $CONTACT_USER"
 
       - name: List repository contents
         run: ls -la
