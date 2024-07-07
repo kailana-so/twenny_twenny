@@ -61,7 +61,7 @@ jobs:
           CONTACT_KEY:  ${{ secrets.CONTACT_KEY }}
         run: |
           echo "Starting build process..."
-          yarn build --verbose
+          yarn build
 
   deploy:
     runs-on: ubuntu-latest
