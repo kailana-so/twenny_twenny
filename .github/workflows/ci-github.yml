@@ -8,27 +8,8 @@ on:
 
 jobs:
 
-  # install_dependencies:
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v2
-
-  #     - name: Set up Node.js
-  #       uses: actions/setup-node@v2
-  #       with:
-  #         node-version: '18'
-
-  #     - name: List repository contents
-  #       run: ls -a
-  
-  #     - name: Install dependencies
-  #       run: yarn install
-
   build:
     runs-on: ubuntu-latest
-    # needs: install_dependencies
 
     steps:
       - name: Checkout repository
@@ -44,15 +25,6 @@ jobs:
           echo "Installing dependencies..."
           yarn install
 
-      - name: Check configs
-        run: |
-          echo "Checking environment variables..."
-          echo "X_API_URL: $X_API_URL"
-          echo "CONTACT_USER: $CONTACT_USER"
-
-      - name: List repository contents
-        run: ls -la
-
       - name: Build project
         env: 
           X_API_KEY: ${{ secrets.X_API_KEY }}
@@ -61,6 +33,8 @@ jobs:
           CONTACT_KEY:  ${{ secrets.CONTACT_KEY }}
         run: |
           echo "Starting build process..."
+          echo "X_API_KEY: $X_API_KEY"
+          echo "CONTACT_KEY: $CONTACT_KEY"
           yarn build
 
   deploy:
@@ -77,11 +51,16 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Assume AWS role
+        id: assume-role
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: 'ap-southeast-2'
+          role-duration-seconds: 3600
+
       - name: Deploy to AWS S3
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: 'ap-southeast-2'
-          S3_BUCKET: ${{ secrets.S3_BUCKET}}
+          S3_BUCKET: ${{ secrets.S3_BUCKET }}
         run: |
           aws s3 sync .next s3://$S3_BUCKET --delete

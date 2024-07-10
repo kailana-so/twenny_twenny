@@ -39,10 +39,8 @@ export default function Weather() {
                 setTemperature(response.data.current.feelslike_c);
                 setConditions(response.data.current.condition.text.toLowerCase().replace(/\s+/g, ''));
                 setLoading(false);
-                console.log(response.data);
             })
             .catch(function (error) {
-                console.log(error);
                 setWeatherError('/images/error.png');
                 setLoading(false);
             });
