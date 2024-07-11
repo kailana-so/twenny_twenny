@@ -93,6 +93,10 @@ jobs:
       - name: Deploy to AWS S3
         env:
           S3_BUCKET: ${{ secrets.S3_BUCKET }}
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_HOST: ${{ secrets.X_API_HOST }}
+          CONTACT_USER: ${{ secrets.CONTACT_USER }}
+          CONTACT_KEY:  ${{ secrets.CONTACT_KEY }}
         run: |
           echo "Starting sync process..."
           aws s3 sync out s3://$S3_BUCKET --delete
