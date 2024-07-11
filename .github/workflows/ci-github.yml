@@ -70,11 +70,12 @@ jobs:
           echo "X_API_KEY: $X_API_KEY"
           echo "CONTACT_KEY: $CONTACT_KEY"
           yarn install
-          echo "Starting install process..."
+          echo "Starting build process..."
           yarn build
   
       - name: Verify .next directory
         run: |
+          echo "Verifying .next directory..."
           if [ ! -d ".next" ]; then
             echo "Directory .next does not exist."
             exit 1

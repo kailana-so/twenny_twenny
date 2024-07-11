@@ -47,6 +47,7 @@ const Form = ({ formData, handleChange, handleSubmit, sendError, emailSubmitted,
     <Grid 
       container
       flexDirection="column"
+      xs={3}
     >
       <form onSubmit={handleSubmit}>
         <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -59,7 +60,7 @@ const Form = ({ formData, handleChange, handleSubmit, sendError, emailSubmitted,
           <FormControl fullWidth>
             <TextField id="message" label="Message" multiline minRows={4} variant="outlined" value={formData.message} onChange={(e) => handleChange('message', e.target.value)} />
           </FormControl>
-          <Grid container justifyContent="flex-end">
+          <Grid container justifyContent="flex-end" xs={12}>
             <Grid item>
             {loading  ? (
                   <CircularProgress className={styles.blue} />

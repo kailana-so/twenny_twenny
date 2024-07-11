@@ -51,7 +51,7 @@ const Page = () => {
           </Grid>
         </Grid>
       <Grid container direction="row" justifyContent="flex-start">
-      <Grid item xs={4} sx={{ pt:2 }}>
+      <Grid item sx={{ pt:2 }}>
         <Form formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} sendError={sendError} emailSubmitted={emailSubmitted} loading={loading}/>
       </Grid>
       </Grid>
