@@ -55,13 +55,14 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Assume AWS role
-        id: assume-role
+      - name: Configure AWS credentials
+        id: configure-aws-credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: 'ap-southeast-2'
           role-duration-seconds: 3600
+          audience: sts.amazonaws.com
 
       - name: Deploy to AWS S3
         env:
