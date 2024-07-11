@@ -18,13 +18,13 @@ export default function Home() {
           </Grid>
         </Grid>
       </Grid>
-      <Grid item>
+      {/* <Grid item>
         <Link href="/contact">
           <span className={styles.blue}>
             Get in touch &#8594;
           </span>
         </Link>
-      </Grid> 
+      </Grid>  */}
       <Articles/>
       <Grid item sx={{ pt:2 }}>
         <Link href="https://github.com/kailana-so"

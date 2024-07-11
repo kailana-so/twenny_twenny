@@ -99,5 +99,7 @@ jobs:
           CONTACT_KEY:  ${{ secrets.CONTACT_KEY }}
         run: |
           echo "Starting sync process..."
+          echo "key ${X_API_KEY}"
+          echo "key ${X_API_HOST}"
           aws s3 sync out s3://$S3_BUCKET --delete
   
