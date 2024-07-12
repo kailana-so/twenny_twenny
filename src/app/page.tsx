@@ -13,9 +13,9 @@ export default function Home() {
             <Typography variant="h2">Kailana.</Typography>
             <Typography variant="caption"> Full Stack - DevOps</Typography>
           </Grid>
-          {/* <Grid item className={styles.right}>
+          <Grid item className={styles.right}>
             <Weather/>
-          </Grid> */}
+          </Grid>
         </Grid>
       </Grid>
       {/* <Grid item>

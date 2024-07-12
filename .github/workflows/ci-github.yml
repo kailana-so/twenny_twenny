@@ -73,14 +73,6 @@ jobs:
           echo "Starting build process..."
           yarn build
   
-      - name: Verify .next directory
-        run: |
-          echo "Verifying .next directory..."
-          if [ ! -d ".next" ]; then
-            echo "Directory .next does not exist."
-            exit 1
-          fi
-  
       - name: Configure AWS credentials
         id: configure-aws-credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -93,13 +85,8 @@ jobs:
       - name: Deploy to AWS S3
         env:
           S3_BUCKET: ${{ secrets.S3_BUCKET }}
-          X_API_KEY: ${{ secrets.X_API_KEY }}
-          X_API_HOST: ${{ secrets.X_API_HOST }}
-          CONTACT_USER: ${{ secrets.CONTACT_USER }}
-          CONTACT_KEY:  ${{ secrets.CONTACT_KEY }}
+          NEXT_PUBLIC_API_GATEWAY_URL: ${{ secrets.NEXT_PUBLIC_API_GATEWAY_URL}}
         run: |
           echo "Starting sync process..."
-          echo "key ${X_API_KEY}"
-          echo "key ${X_API_HOST}"
           aws s3 sync out s3://$S3_BUCKET --delete
   

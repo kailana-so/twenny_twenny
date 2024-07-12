@@ -21,20 +21,14 @@ export default function Weather() {
     const [weatherError, setWeatherError] = useState<string>("");
 
     const place = '-33.71513, 150.3127';
-
-    const options = {
-        method: 'GET',
-        url: 'https://weatherapi-com.p.rapidapi.com/current.json',
-        params: { q: place },
-        headers: {
-            'X-RapidAPI-Key':  process.env.X_API_KEY,
-            'X-RapidAPI-Host':  process.env.X_API_HOST,
-          }  
-    };
+    const weatherApi = process.env.NEXT_PUBLIC_API_GATEWAY_URL
 
     useEffect(() => {
         setLoading(true);
-        axios.request<WeatherResponse, AxiosResponse<WeatherResponse>>(options)
+        if (weatherApi) {
+            axios.get<WeatherResponse, AxiosResponse<WeatherResponse>>(weatherApi, {
+                params: { q: place }
+            })
             .then((response) => {
                 setTemperature(response.data.current.feelslike_c);
                 setConditions(response.data.current.condition.text.toLowerCase().replace(/\s+/g, ''));
@@ -44,8 +38,12 @@ export default function Weather() {
                 setWeatherError('/images/error.png');
                 setLoading(false);
             });
-
-    }, []);
+        } else {
+            setWeatherError('/images/error.png');
+            setLoading(false);
+        }
+    }, [weatherApi]);
+    
 
     return (
         <Grid container justifyItems="flex-end" direction="column">

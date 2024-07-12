@@ -11,7 +11,7 @@ const Page = () => {
   const [sendError, setSendError] = useState(false)
   const [emailSubmitted, setEmailSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
-
+  
   // Form submission handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
