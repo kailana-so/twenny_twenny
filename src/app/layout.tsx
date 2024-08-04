@@ -4,6 +4,7 @@ import "./globals.css";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter'
 import theme from '../theme'
 import { ThemeProvider } from '@mui/material/styles';
+import { Grid } from "@mui/material";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -19,13 +20,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <link rel="icon" href="/ks.png" />
       <body 
         className={montserrat.className}
         suppressHydrationWarning={true}
         >
           <AppRouterCacheProvider  options={{ enableCssLayer: true }}>
             <ThemeProvider theme={theme}>
-              {children}
+              <Grid sx={{ m: 2 }}>
+                {children}
+              </Grid>
             </ThemeProvider>
           </AppRouterCacheProvider>
         </body>

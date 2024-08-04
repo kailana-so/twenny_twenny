@@ -13,9 +13,6 @@ const Articles = () => {
             .then((res) => {
                 setArticles(res.data.items);
             })
-            .catch((error) => {
-                console.error("Error fetching blog articles:", error);
-            });
     };
 
     useEffect(() => {
@@ -23,7 +20,7 @@ const Articles = () => {
     }, []);
 
     return (
-        <Box>
+        <Box sx={{ p: 2 }}>
             {articles.map((article) => {
                 const date = new Date(article.pubDate).toLocaleDateString();
                 const match = article.content && article.content.match(imgRegex); // Check if article.content exists

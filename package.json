@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "http-server ./out -p 3000",
     "lint": "next lint"
   },
   "dependencies": {
@@ -31,6 +31,8 @@
     "eslint-config-next": "14.1.0",
     "eslint-plugin-react": "^7.34.3",
     "globals": "^15.8.0",
+    "http-server": "^14.1.1",
+    "serve": "^14.2.3",
     "typescript": "^5",
     "typescript-eslint": "^7.15.0"
   }

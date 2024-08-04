@@ -3,8 +3,7 @@ import nodemailer from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
 
 export async function POST(request: NextRequest) {
-  const { email, name, message } = await request.json();
-
+  const { contact, name, message } = await request.json();
   const transport = nodemailer.createTransport({
     service: 'gmail',
     /* 
@@ -23,10 +22,9 @@ export async function POST(request: NextRequest) {
   });
 
   const mailOptions: Mail.Options = {
-    from: process.env.CONTACT_USER,
+    from: contact,
     to: process.env.CONTACT_USER,
-    // cc: email, (uncomment this line if req copy to the sender)
-    subject: `Message from ${name} (${email})`,
+    subject: `Message from ${name} (${contact})`,
     text: message,
   };
 
@@ -34,7 +32,7 @@ export async function POST(request: NextRequest) {
     new Promise<string>((resolve, reject) => {
       transport.sendMail(mailOptions, function (err) {
         if (!err) {
-          resolve('Email sent');
+          resolve(`Email from ${contact} sent with message ${message}`);
         } else {
           reject(err.message);
         }
@@ -42,8 +40,8 @@ export async function POST(request: NextRequest) {
     });
 
   try {
-    await sendMailPromise();
-    return NextResponse.json({ message: 'Email sent' });
+    const response = await sendMailPromise();
+    return NextResponse.json({ message: response });
   } catch (err) {
     return NextResponse.json({ error: err }, { status: 500 });
   }
