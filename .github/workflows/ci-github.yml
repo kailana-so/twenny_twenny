@@ -39,6 +39,7 @@ jobs:
           X_API_HOST: ${{ secrets.X_API_HOST }}
           CONTACT_USER: ${{ secrets.CONTACT_USER }}
           CONTACT_KEY:  ${{ secrets.CONTACT_KEY }}
+          NEXT_PUBLIC_API_GATEWAY_URL: ${{ secrets.NEXT_PUBLIC_API_GATEWAY_URL}}
         run: |
           echo "Starting build process..."
           echo "X_API_KEY: $X_API_KEY"
@@ -65,6 +66,7 @@ jobs:
           X_API_HOST: ${{ secrets.X_API_HOST }}
           CONTACT_USER: ${{ secrets.CONTACT_USER }}
           CONTACT_KEY:  ${{ secrets.CONTACT_KEY }}
+          NEXT_PUBLIC_API_GATEWAY_URL: ${{ secrets.NEXT_PUBLIC_API_GATEWAY_URL}}
         run: |
           echo "Starting install process..."
           echo "X_API_KEY: $X_API_KEY"
