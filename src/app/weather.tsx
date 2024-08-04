@@ -25,9 +25,7 @@ export default function Weather() {
 
     useEffect(() => {
         setLoading(true);
-        console.log("loading request")
         if (weatherApi) {
-            console.group(" in if weatherApi")
             axios.get<WeatherResponse, AxiosResponse<WeatherResponse>>(weatherApi, {
                 params: { q: place }
             })
@@ -44,7 +42,6 @@ export default function Weather() {
             setWeatherError('/images/error.png');
             setLoading(false);
         }
-        console.group(" outside if weatherApi")
     }, [weatherApi]);
     
 
