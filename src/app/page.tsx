@@ -11,7 +11,7 @@ export default function Home() {
         <Grid container direction="row" justifyContent="space-between">
           <Grid item>
             <Typography variant="h2">Kailana.</Typography>
-            <Typography variant="caption"> Full Stack - DevOps</Typography>
+            <Typography variant="caption"> Full Stack Dev</Typography>
           </Grid>
           <Grid item className={styles.right}>
             <Weather/>
