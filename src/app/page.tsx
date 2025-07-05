@@ -18,7 +18,9 @@ export default function Home() {
           </Grid>
         </Grid>
       </Grid>
-      <Link href="https://essaypig.com"
+      <Link 
+          style={{textDecoration: 'none', color: 'inherit', fontSize: '14px', marginLeft: '15px'}}
+          href="https://essaypig.com"
               target="_blank"
               rel="noopener noreferrer"
         > essaypig.com
