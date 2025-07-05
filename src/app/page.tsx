@@ -18,13 +18,11 @@ export default function Home() {
           </Grid>
         </Grid>
       </Grid>
-      {/* <Grid item>
-        <Link href="/contact">
-          <span className={styles.blue}>
-            Get in touch &#8594;
-          </span>
+      <Link href="https://essaypig.com"
+              target="_blank"
+              rel="noopener noreferrer"
+        > essaypig.com
         </Link>
-      </Grid>  */}
       <Articles/>
       <Grid item sx={{ pt:2 }}>
         <Link href="https://github.com/kailana-so"
