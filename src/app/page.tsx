@@ -18,13 +18,22 @@ export default function Home() {
           </Grid>
         </Grid>
       </Grid>
-      <Link 
+      <Grid container direction="row" gap={5}>
+        <Link 
           style={{textDecoration: 'none', color: 'inherit', fontSize: '14px', marginLeft: '15px'}}
           href="https://essaypig.com"
-              target="_blank"
-              rel="noopener noreferrer"
+          target="_blank"
+          rel="noopener noreferrer"
         > essaypig.com
         </Link>
+        <Link
+          style={{textDecoration: 'none', color: 'inherit', fontSize: '14px', marginLeft: '15px'}}
+          href="https://slo-id.com/map"
+          target="_blank"
+          rel="noopener noreferrer"> 
+          slo-id.com
+        </Link> 
+      </Grid>
       <Articles/>
       <Grid item sx={{ pt:2 }}>
         <Link href="https://github.com/kailana-so"
