@@ -32,14 +32,6 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"> 
           &#8627; slo-id.com
-        </Link> 
-        <Link 
-          style={{textDecoration: 'none', color: 'inherit', fontSize: '14px', marginLeft: '15px'}}
-          href="https://github.com/kailana-sommer"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          &#8627; gh org
         </Link>
         <Link 
           style={{textDecoration: 'none', color: 'inherit', fontSize: '14px', marginLeft: '15px'}}
