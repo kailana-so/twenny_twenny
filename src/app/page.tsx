@@ -36,11 +36,17 @@ export default function Home() {
       </Grid>
       <Articles/>
       <Grid item sx={{ pt:2 }}>
+        <Link href="https://github.com/kailana-sommer"
+              target="_blank"
+              rel="noopener noreferrer"
+        >
+          &#8627; gh org
+        </Link>
         <Link href="https://github.com/kailana-so"
               target="_blank"
               rel="noopener noreferrer"
         >
-          &#8627; Github
+          &#8627; gh playground
         </Link>
       </Grid>
     </Grid>
