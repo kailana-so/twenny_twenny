@@ -18,37 +18,39 @@ export default function Home() {
           </Grid>
         </Grid>
       </Grid>
-      <Grid container direction="row" gap={5}>
+      <Grid container direction="row" gap={2}>
         <Link 
           style={{textDecoration: 'none', color: 'inherit', fontSize: '14px', marginLeft: '15px'}}
           href="https://essaypig.com"
           target="_blank"
           rel="noopener noreferrer"
-        > essaypig.com
+        > &#8627; essaypig.com
         </Link>
         <Link
           style={{textDecoration: 'none', color: 'inherit', fontSize: '14px', marginLeft: '15px'}}
           href="https://slo-id.com/map"
           target="_blank"
           rel="noopener noreferrer"> 
-          slo-id.com
+          &#8627; slo-id.com
         </Link> 
-      </Grid>
-      <Articles/>
-      <Grid item sx={{ pt:2 }}>
-        <Link href="https://github.com/kailana-sommer"
-              target="_blank"
-              rel="noopener noreferrer"
+        <Link 
+          style={{textDecoration: 'none', color: 'inherit', fontSize: '14px', marginLeft: '15px'}}
+          href="https://github.com/kailana-sommer"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           &#8627; gh org
         </Link>
-        <Link href="https://github.com/kailana-so"
-              target="_blank"
-              rel="noopener noreferrer"
+        <Link 
+          style={{textDecoration: 'none', color: 'inherit', fontSize: '14px', marginLeft: '15px'}}
+          href="https://github.com/kailana-so"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           &#8627; gh playground
         </Link>
       </Grid>
+      <Articles/>
     </Grid>
   );
 }
