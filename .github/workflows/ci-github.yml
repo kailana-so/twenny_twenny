@@ -93,7 +93,7 @@ jobs:
           cd /var/www/kailanasommer
 
           cat > .env <<ENV
-          PORT=3001
+          PORT=3003
           HOSTNAME=127.0.0.1
           X_API_KEY=${{ secrets.X_API_KEY }}
           X_API_HOST=${{ secrets.X_API_HOST }}
