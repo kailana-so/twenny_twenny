@@ -43,12 +43,12 @@ const Articles = async () => {
     return (
         <Box sx={{ p: 2 }}>
             {articles.map((article) => {
-                const date = new Date(article.pubDate).toLocaleDateString();
+                const date = new Date(article.pubDate).toLocaleDateString('en-AU', { timeZone: 'Australia/Sydney' });
                 const match = article.content && article.content.match(imgRegex); // Check if article.content exists
                 const imageThumbnail = match ? match[1] : '';
 
                 return (
-                    <Link key={article.guid} href={article.link}>
+                    <Link key={article.guid} href={article.link} target="_blank" rel="noopener noreferrer">
                         <Grid
                             container
                             direction="row"
@@ -77,11 +77,9 @@ const Articles = async () => {
                                 justifyContent="center"
                                 alignItems="flex-start"
                                 >
-                                <a href={article.link} target="_blank" rel="noopener noreferrer">
-                                    <Typography variant="subtitle1">
-                                        {article.title}
-                                    </Typography>
-                                </a>
+                                <Typography variant="subtitle1">
+                                    {article.title}
+                                </Typography>
                                 <Typography variant="caption">
                                     {date}
                                 </Typography>
