@@ -20,15 +20,9 @@ export default function Weather() {
     const [loading, setLoading] = useState<boolean>(true);
     const [weatherError, setWeatherError] = useState<string>("");
 
-    const place = '-33.71513, 150.3127';
-    const weatherApi = process.env.NEXT_PUBLIC_API_GATEWAY_URL
-
     useEffect(() => {
         setLoading(true);
-        if (weatherApi) {
-            axios.get<WeatherResponse, AxiosResponse<WeatherResponse>>(weatherApi, {
-                params: { q: place }
-            })
+        axios.get<WeatherResponse, AxiosResponse<WeatherResponse>>('/api/weather')
             .then((response) => {
                 setTemperature(response.data.current.feelslike_c);
                 setConditions(response.data.current.condition.text.toLowerCase().replace(/\s+/g, ''));
@@ -38,11 +32,7 @@ export default function Weather() {
                 setWeatherError('/images/error.png');
                 setLoading(false);
             });
-        } else {
-            setWeatherError('/images/error.png');
-            setLoading(false);
-        }
-    }, [weatherApi]);
+    }, []);
     
 
     return (

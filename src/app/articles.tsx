@@ -1,23 +1,44 @@
-'use client';
-import { useEffect, useState } from "react";
 import { Box, Typography, Grid, Link } from "@mui/material";
-import axios from "axios";
 
-const Articles = () => {
-    const [articles, setArticles] = useState<Article[]>([]);
-    const imgRegex = /<img[^>]+src="(https:\/\/cdn-images-[^">]+)"/;
+const FEED_URL = "https://medium.com/feed/@TwennyTwenny";
+const imgRegex = /<img[^>]+src="(https:\/\/cdn-images-[^">]+)"/;
 
-    const getPostData = () => {
-        axios
-            .get("https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@TwennyTwenny")
-            .then((res) => {
-                setArticles(res.data.items);
-            })
-    };
+async function getArticles(): Promise<Article[]> {
+    try {
+        const res = await fetch(FEED_URL, {
+            headers: { "User-Agent": "Mozilla/5.0 (compatible; kailanasommer.com)" },
+            next: { revalidate: 3600 },
+        });
+        if (!res.ok) {
+            console.error(`Medium feed returned ${res.status}`);
+            return [];
+        }
+        return parseFeed(await res.text());
+    } catch (err) {
+        console.error("Medium feed fetch failed", err);
+        return [];
+    }
+}
 
-    useEffect(() => {
-        getPostData();
-    }, []);
+function parseFeed(xml: string): Article[] {
+    const items = xml.match(/<item>[\s\S]*?<\/item>/g) ?? [];
+    return items.map((item) => ({
+        guid: getTag(item, "guid"),
+        pubDate: getTag(item, "pubDate"),
+        content: getTag(item, "content:encoded"),
+        link: getTag(item, "link"),
+        title: getTag(item, "title"),
+    }));
+}
+
+function getTag(xml: string, tag: string): string {
+    const match = xml.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`));
+    if (!match) return "";
+    return match[1].replace(/^<!\[CDATA\[([\s\S]*)\]\]>$/, "$1").trim();
+}
+
+const Articles = async () => {
+    const articles = await getArticles();
 
     return (
         <Box sx={{ p: 2 }}>
@@ -27,20 +48,19 @@ const Articles = () => {
                 const imageThumbnail = match ? match[1] : '';
 
                 return (
-                    <Link href={article.link}>
-                        <Grid 
-                            key={article.guid} 
+                    <Link key={article.guid} href={article.link}>
+                        <Grid
                             container
                             direction="row"
                             justifyContent="flex-start"
                             alignItems="flex-start"
-                            sx={{ 
-                                mt: 1, 
-                                p: 2, 
-                                border: "1px dashed black", 
+                            sx={{
+                                mt: 1,
+                                p: 2,
+                                border: "1px dashed black",
                                 borderRadius: "3px",
                                 backgroundColor: "white"
-                                
+
                             }}
                         >
                             {imageThumbnail && (

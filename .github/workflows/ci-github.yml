@@ -1,6 +1,7 @@
+name: CI
+
 permissions:
-  id-token: write   # Required for requesting the JWT
-  contents: read    # Required for actions/checkout
+  contents: read
 
 on:
   push:
@@ -8,12 +9,18 @@ on:
       - main
   pull_request:
     branches:
-      - '*' 
+      - '*'
   workflow_dispatch:  # Manual trigger
     inputs:
       deploy:
-        description: 'Deploy to AWS S3'
-        required: true  # Makes the input required for manual trigger
+        description: 'Deploy to the droplet'
+        required: true
+        type: boolean
+        default: false
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -21,74 +28,81 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
+          cache: 'yarn'
 
       - name: Install dependencies
-        run: |
-          echo "Installing dependencies..."
-          yarn install
+        run: yarn install --frozen-lockfile
 
       - name: Build project
-        env: 
-          X_API_KEY: ${{ secrets.X_API_KEY }}
-          X_API_HOST: ${{ secrets.X_API_HOST }}
-          CONTACT_USER: ${{ secrets.CONTACT_USER }}
-          CONTACT_KEY:  ${{ secrets.CONTACT_KEY }}
-          NEXT_PUBLIC_API_GATEWAY_URL: ${{ secrets.NEXT_PUBLIC_API_GATEWAY_URL}}
+        run: yarn build
+
+      - name: Assemble standalone bundle
         run: |
-          echo "Starting build process..."
-          echo "X_API_KEY: $X_API_KEY"
-          echo "CONTACT_KEY: $CONTACT_KEY"
-          yarn build
+          cp -r .next/static .next/standalone/.next/static
+          cp -r public .next/standalone/public
+
+      - name: Upload build output
+        uses: actions/upload-artifact@v4
+        with:
+          name: standalone
+          path: .next/standalone
+          include-hidden-files: true
+          retention-days: 1
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed') || (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy)
-  
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy == 'true')
+
+    env:
+      APP_DIR: /var/www/kailanasommer
+      TARGET: ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }}
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-  
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - name: Download build output
+        uses: actions/download-artifact@v4
         with:
-          node-version: '18'
-  
-      - name: Build project
-        env: 
-          X_API_KEY: ${{ secrets.X_API_KEY }}
-          X_API_HOST: ${{ secrets.X_API_HOST }}
-          CONTACT_USER: ${{ secrets.CONTACT_USER }}
-          CONTACT_KEY:  ${{ secrets.CONTACT_KEY }}
-          NEXT_PUBLIC_API_GATEWAY_URL: ${{ secrets.NEXT_PUBLIC_API_GATEWAY_URL}}
-        run: |
-          echo "Starting install process..."
-          echo "X_API_KEY: $X_API_KEY"
-          echo "CONTACT_KEY: $CONTACT_KEY"
-          yarn install
-          echo "Starting build process..."
-          yarn build
-  
-      - name: Configure AWS credentials
-        id: configure-aws-credentials
-        uses: aws-actions/configure-aws-credentials@v1
+          name: standalone
+          path: standalone
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: 'ap-southeast-2'
-          role-duration-seconds: 3600
-          audience: sts.amazonaws.com
-        
-      - name: Deploy to AWS S3
-        env:
-          S3_BUCKET: ${{ secrets.S3_BUCKET }}
-          NEXT_PUBLIC_API_GATEWAY_URL: ${{ secrets.NEXT_PUBLIC_API_GATEWAY_URL}}
+          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+
+      - name: Trust droplet host key
         run: |
-          echo "Starting sync process..."
-          aws s3 sync out s3://$S3_BUCKET --delete
-  
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.DROPLET_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Ship the build
+        run: |
+          ssh -T "$TARGET" "mkdir -p $APP_DIR"
+          rsync -az --delete --exclude '.env' standalone/ "$TARGET:$APP_DIR/"
+
+      - name: Write env and restart
+        run: |
+          ssh -T "$TARGET" 'bash -s' <<'EOF'
+          set -euo pipefail
+          cd /var/www/kailanasommer
+
+          cat > .env <<ENV
+          PORT=3001
+          HOSTNAME=127.0.0.1
+          X_API_KEY=${{ secrets.X_API_KEY }}
+          X_API_HOST=${{ secrets.X_API_HOST }}
+          ENV
+          chmod 600 .env
+
+          pm2 restart kailanasommer \
+            || pm2 start server.js --name kailanasommer --node-args="--env-file=.env" --max-memory-restart 200M
+          pm2 save
+
+          echo "✅ Deployment complete"
+          EOF
